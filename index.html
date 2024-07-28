@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bus Stop Combinations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            font-size: 16px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+        .combination {
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter Bus Stops</h1>
+    <form id="busStopForm">
+        <textarea id="busStops" placeholder="Enter bus stops, one per line"></textarea><br>
+        <button type="submit">Get Combinations</button>
+    </form>
+    <h2>Combinations</h2>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('busStopForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const busStops = document.getElementById('busStops').value.trim().split('\n').map(stop => stop.trim()).filter(stop => stop !== '');
+
+            fetch('/combinations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ busStopData: busStops })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '';
+                data.forEach(combination => {
+                    const comboDiv = document.createElement('div');
+                    comboDiv.className = 'combination';
+                    comboDiv.textContent = combination.join(' - ');
+                    resultDiv.appendChild(comboDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
