@@ -51,14 +51,14 @@ if(!checkBus){
       }
     }
 
-    if (from == "" || from !== "string") {
+    if (from.trim() === '' ||typeof from !== "string") {
       return res.status(400).json({
         status: false,
         message: "from should not be empty and must be a string",
       });
     }
 
-    if (to == "" || to !== "string") {
+    if (to.trim() === '' ||typeof to !== "string") {
         return res.status(400).json({
           status: false,
           message: "from should not be empty and must be a string",
@@ -70,19 +70,19 @@ if (checkBlogExists){
     return res.status(400).json({status: false, message: `Blog already exists for this particular bus for this from  ${from} to ${to} route `});
 }
 
-    if (blogTitle == "" || blogTitle !== "string") {
+    if (blogTitle.trim() === ''  ||typeof blogTitle !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogTitle" });
     }
    
-    if (blogShortDes == "" || blogShortDes !== "string") {
+    if (blogShortDes.trim() === '' ||typeof blogShortDes !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogShortDes" });
     }
 
-  if (blogLongDes == "" || blogLongDes !== "string") {
+  if (blogLongDes.trim() === '' ||typeof blogLongDes !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogLongDes" });
@@ -150,7 +150,7 @@ if(!checkBlog){
 
 
  if(from){
-    if (from == "" || from !== "string") {
+    if (from.trim() === '' ||typeof from !== "string") {
       return res.status(400).json({
         status: false,
         message: "{from} should not be empty and must be a string",
@@ -159,7 +159,7 @@ if(!checkBlog){
 }
 
 if(to){
-    if (to == "" || to !== "string") {
+    if (to.trim() === '' ||typeof to !== "string") {
         return res.status(400).json({
           status: false,
           message: "{to} should not be empty and must be a string",
@@ -169,21 +169,21 @@ if(to){
     }
 
 if(blogTitle){
-    if (blogTitle == "" || blogTitle !== "string") {
+    if (blogTitle.trim() === ''|| typeof blogTitle !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogTitle" });
     }
    }
    if(blogShortDes){
-    if (blogShortDes == "" || blogShortDes !== "string") {
+    if (blogShortDes.trim() === ''||typeof blogShortDes !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogShortDes" });
     }
 }
 if(blogLongDes){
-  if (blogLongDes == "" || blogLongDes !== "string") {
+  if (blogLongDes.trim() === '' ||typeof blogLongDes !== "string") {
       return res
         .status(400)
         .json({ status: false, message: "Invalid blogLongDes" });
@@ -217,6 +217,7 @@ return res.status(200).json({status: true, message:"blog updated successfully", 
 };
 
 
+// from :A to B => 10 
 exports.getAllBusesListAccDestination = async (req, res)=>{
   try{
 
@@ -250,7 +251,7 @@ res.status(200).json({status: true, message: "Bus data fetched successfully for 
   }
 }
 
-
+// tittle short description long description bus image aur all stop list from to 
 exports.getparticularBusBlog = async (req, res)=>{
   try{
 

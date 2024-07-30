@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const app = express();
 const path = require('path');
@@ -7,6 +8,9 @@ app.use(express.json());
 
 app.use(cors())
 
+app.use(fileUpload());
+
+const admin = require("./routing/adminRouting")
 app.get("/", async (req, res) => {
   return res.sendFile(path.join(__dirname,"index.html"))
 })
@@ -38,6 +42,10 @@ app.post('/combinations', (req, res) => {
     const combinations = getCombinations(data, 2);
     res.json(combinations);
 });
+
+ app.use("/", admin)
+
+
 
 module.exports = app
 

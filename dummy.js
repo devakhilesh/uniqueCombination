@@ -1,4 +1,5 @@
-/* Babarpur Extension,
+/* 
+Babarpur Extension,
 Mauzpur,
 Zafarabad School,
 Eidgah,
@@ -30,4 +31,6 @@ East Patel Nagar,
 Patel Nagar Metro Station,
 West Patel Nagar,
 Shadipur Metro Station,
-Shadipur Depot */
+Shadipur Depot 
+*/
+

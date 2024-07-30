@@ -1,0 +1,59 @@
+   title:{}
+   
+   busImage:{}
+   busNum:{}
+   buscontent:{}
+    Section1: {
+title:"Delhi Bus Route 218: Timings and Schedule Information"
+des:DTC Bus Route 218 runs from Jheel to Tri Nagar Jai Mata Market with 12 trips daily. The first bus starts at 7:30 AM and the last bus runs at 10:40 PM with frequency varying during peak and off-peak hours.
+   
+subSection1:{
+title:{},
+Bus starts:{},
+First bus:{},
+Last bus:{}
+Total stops:{},
+Total departures:{}
+},
+subsection2:{
+    title:{},
+Bus starts:{},
+First bus:{},
+Last bus:{}
+Total stops:{},
+Total departures:{}
+}
+
+ },
+    Section2: {
+        tittle:{},
+      subsection1:{
+        title:{},
+        busListsUp:[]
+      },
+         subsection2:{
+        title:{},
+        busListsUp:[]
+      },
+      subsection3:{
+        tittle:{},
+        des:{}
+      },
+
+    }, 
+       Section3: {
+        title:{},
+        subSection1:{
+            que:{
+
+            },
+          ans{
+
+          }
+        }
+    },
+
+    section4:{
+        title:{},
+        allBusStops:{},
+    }

@@ -7,84 +7,148 @@ exports.createBus = async (req, res) => {
   try {
     const data = req.body;
 
-    const { busName, busNumber, busImage, busStopList } = data;
+    
+    const requiredFields = [
+      "busTittle", "busNumber", "busImage", "busContent",
+      "section1", "section2", "section3", "section4"
+    ];
 
-    const vaildfield = ["busName", "busNumber", "busImage", "busStopList"];
-
-    const dataFields = Object.keys(data);
-
-    // Check for invalid fields
-    const invalidFields = dataFields.filter(
-      (field) => !vaildfield.includes(field)
-    );
-    if (invalidFields.length > 0) {
-      return res.status(400).json({
-        status: false,
-        message: `Invalid fields provided: ${invalidFields.join(
-          ", "
-        )}. Only the following fields are allowed: ${vaildfield.join(", ")}`,
-      });
-    }
-
-    for (let field of vaildfield) {
+    // required fields
+    for (let field of requiredFields) {
       if (!data.hasOwnProperty(field)) {
-        return res
-          .status(400)
-          .json({ status: false, message: `${field} is required` });
+        return res.status(400).json({ status: false, message: `${field} is required` });
       }
     }
 
-    if (
-      !busStopList ||
-      !Array.isArray(busStopList) ||
-      busStopList.length === 0
-    ) {
-      return res
-        .status(400)
-        .json({
-          status: false,
-          message: "busStopList should not be empty and must be an array",
-        });
+    // string fields
+    const stringFields = ["busTittle", "busNumber", "busImage", "busContent"];
+    for (let field of stringFields) {
+      if (typeof data[field] !== "string" || data[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid ${field}` });
+      }
     }
 
-    if (busName == "" || busName !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid busName" });
-    }
-    if (busNumber == "" || busNumber !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid busNumber" });
+    //busNumber is unique so...
+    const check = await busModel.findOne({ busNumber: data.busNumber });
+    if (check) {
+      return res.status(400).json({ status: false, message: "Bus number already exists" });
     }
 
-const check = await busModel.findOne({busNumber: busNumber});
-if (check){
-    return res
-       .status(400)
-       .json({ status: false, message: "Bus number already exists" });
-}
-
-    if (busImage == "" || busImage !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid busImage" });
+    // section1
+    if (!data.section1 || typeof data.section1 !== 'object') {
+      return res.status(400).json({ status: false, message: "Invalid section1" });
     }
 
+    const section1Fields = ["title1", "description1"];
+    const subSection1AFields = ["title1A", "busStarts1A", "busEnds1A", "firstBus1A", "lastBus1A", "totalStops1A", "totalDepartures1A"];
+    const subSection1BFields = ["title1B", "busStarts1B", "busEnds1B", "firstBus1B", "lastBus1B", "totalStops1B", "totalDepartures1B"];
+
+    for (let field of section1Fields) {
+      if (!data.section1[field] || typeof data.section1[field] !== 'string' || data.section1[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section1.${field}` });
+      }
+    }
+
+    for (let field of subSection1AFields) {
+      if (!data.section1.subSection1A[field] || typeof data.section1.subSection1A[field] !== 'string' || data.section1.subSection1A[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section1.subSection1A.${field}` });
+      }
+    }
+
+    for (let field of subSection1BFields) {
+      if (!data.section1.subSection1B[field] || typeof data.section1.subSection1B[field] !== 'string' || data.section1.subSection1B[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section1.subSection1B.${field}` });
+      }
+    }
+
+    //section2
+    if (!data.section2 || typeof data.section2 !== 'object') {
+      return res.status(400).json({ status: false, message: "Invalid section2" });
+    }
+
+    const section2Fields = ["title2"];
+    const subSection2AFields = ["title2A"];
+    const subSection2BFields = ["title2B"];
+    const subSection3Fields = ["title3", "description3"];
+
+    for (let field of section2Fields) {
+      if (!data.section2[field] || typeof data.section2[field] !== 'string' || data.section2[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section2.${field}` });
+      }
+    }
+
+    for (let field of subSection2AFields) {
+      if (!data.section2.subSection2A[field] || typeof data.section2.subSection2A[field] !== 'string' || data.section2.subSection2A[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section2.subSection2A.${field}` });
+      }
+    }
+
+    if (!Array.isArray(data.section2.subSection2A.busListUpRoute) || data.section2.subSection2A.busListUpRoute.length === 0) {
+      return res.status(400).json({ status: false, message: `Invalid section2.subSection2A.busListUpRoute` });
+    }
+
+    for (let field of subSection2BFields) {
+      if (!data.section2.subSection2B[field] || typeof data.section2.subSection2B[field] !== 'string' || data.section2.subSection2B[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section2.subSection2B.${field}` });
+      }
+    }
+
+    if (!Array.isArray(data.section2.subSection2B.busListDownRoute) || data.section2.subSection2B.busListDownRoute.length === 0) {
+      return res.status(400).json({ status: false, message: `Invalid section2.subSection2B.busListDownRoute` });
+    }
+
+    for (let field of subSection3Fields) {
+      if (!data.section2.subSection3[field] || typeof data.section2.subSection3[field] !== 'string' || data.section2.subSection3[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section2.subSection3.${field}` });
+      }
+    }
+
+    //section3
+    if (!data.section3 || typeof data.section3 !== 'object') {
+      return res.status(400).json({ status: false, message: "Invalid section3" });
+    }
+
+    if (!data.section3.title3 || typeof data.section3.title3 !== 'string' || data.section3.title3.trim() === '') {
+      return res.status(400).json({ status: false, message: `Invalid section3.title3` });
+    }
+
+    if (!Array.isArray(data.section3.faq) || data.section3.faq.length === 0) {
+      return res.status(400).json({ status: false, message: `Invalid section3.faq` });
+    }
+
+    for (let faq of data.section3.faq) {
+      if (!faq.que || typeof faq.que !== 'string' || faq.que.trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section3.faq.que` });
+      }
+      if (!faq.ans || typeof faq.ans !== 'string' || faq.ans.trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section3.faq.ans` });
+      }
+    }
+
+    //section4
+    if (!data.section4 || typeof data.section4 !== 'object') {
+      return res.status(400).json({ status: false, message: "Invalid section4" });
+    }
+
+    if (!data.section4.title4 || typeof data.section4.title4 !== 'string' || data.section4.title4.trim() === '') {
+      return res.status(400).json({ status: false, message: `Invalid section4.title4` });
+    }
+
+    if (!data.section4.allBusStops || typeof data.section4.allBusStops !== 'string' || data.section4.allBusStops.trim() === '') {
+      return res.status(400).json({ status: false, message: `Invalid section4.allBusStops` });
+    }
+
+    // Save bus data
     const saveBusData = await busModel.create(data);
     if (!saveBusData) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Failed to save bus data" });
+      return res.status(400).json({ status: false, message: "Failed to save bus data" });
     }
 
-    res
-      .status(200)
-      .json({
-        status: true,
-        message: "Bus data saved successfully",
-        data: saveBusData,
-      });
+    res.status(200).json({
+      status: true,
+      message: "Bus data saved successfully",
+      data: saveBusData,
+    });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
@@ -95,60 +159,133 @@ exports.updateBus = async (req, res) => {
     const busId = req.params.busId;
     const data = req.body;
 
-    if (!busId || !isValidObjectId(busId)) {
+    if (!busId || !mongoose.Types.ObjectId.isValid(busId)) {
       return res.status(400).json({ status: false, message: "Invalid busId" });
     }
 
-    const { busName, busNumber, busImage, busStopList } = data;
+    const requiredFields = [
+      "busTittle", "busNumber", "busImage", "busContent",
+      "section1", "section2", "section3", "section4"
+    ];
 
-    const vaildfield = ["busName", "busNumber", "busImage", "busStopList"];
-
-    const dataFields = Object.keys(data);
-
-    // Check for invalid fields
-    const invalidFields = dataFields.filter(
-      (field) => !vaildfield.includes(field)
-    );
-    if (invalidFields.length > 0) {
-      return res.status(400).json({
-        status: false,
-        message: `Invalid fields provided: ${invalidFields.join(
-          ", "
-        )}. Only the following fields are allowed: ${vaildfield.join(", ")}`,
-      });
-    }
-
-    if (busStopList) {
-      if (!Array.isArray(busStopList) || busStopList.length === 0) {
-        return res
-          .status(400)
-          .json({
-            status: false,
-            message: "busStopList should not be empty and must be an array",
-          });
+    //  top-level fields
+    for (let field of requiredFields) {
+      if (data.hasOwnProperty(field)) {
+        if (typeof data[field] !== "string" || data[field].trim() === '') {
+          return res.status(400).json({ status: false, message: `Invalid ${field}` });
+        }
       }
     }
 
-    if (busName) {
-      if (busName == "" || busName !== "string") {
-        return res
-          .status(400)
-          .json({ status: false, message: "Invalid busName" });
+    // section1 
+    if (data.section1) {
+      const section1Fields = ["title1", "description1"];
+      const subSection1AFields = ["title1A", "busStarts1A", "busEnds1A", "firstBus1A", "lastBus1A", "totalStops1A", "totalDepartures1A"];
+      const subSection1BFields = ["title1B", "busStarts1B", "busEnds1B", "firstBus1B", "lastBus1B", "totalStops1B", "totalDepartures1B"];
+
+      for (let field of section1Fields) {
+        if (data.section1.hasOwnProperty(field) && (typeof data.section1[field] !== 'string' || data.section1[field].trim() === '')) {
+          return res.status(400).json({ status: false, message: `Invalid section1.${field}` });
+        }
       }
-    }
-    if (busNumber) {
-      if (busNumber == "" || busNumber !== "string") {
-        return res
-          .status(400)
-          .json({ status: false, message: "Invalid busNumber" });
+
+      if (data.section1.subSection1A) {
+        for (let field of subSection1AFields) {
+          if (data.section1.subSection1A.hasOwnProperty(field) && (typeof data.section1.subSection1A[field] !== 'string' || data.section1.subSection1A[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section1.subSection1A.${field}` });
+          }
+        }
+      }
+
+      if (data.section1.subSection1B) {
+        for (let field of subSection1BFields) {
+          if (data.section1.subSection1B.hasOwnProperty(field) && (typeof data.section1.subSection1B[field] !== 'string' || data.section1.subSection1B[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section1.subSection1B.${field}` });
+          }
+        }
       }
     }
 
-    if (busImage) {
-      if (busImage == "" || busImage !== "string") {
-        return res
-          .status(400)
-          .json({ status: false, message: "Invalid busImage" });
+    // section2 
+    if (data.section2) {
+      const section2Fields = ["title2"];
+      const subSection2AFields = ["title2A"];
+      const subSection2BFields = ["title2B"];
+      const subSection3Fields = ["title3", "description3"];
+
+      for (let field of section2Fields) {
+        if (data.section2.hasOwnProperty(field) && (typeof data.section2[field] !== 'string' || data.section2[field].trim() === '')) {
+          return res.status(400).json({ status: false, message: `Invalid section2.${field}` });
+        }
+      }
+
+      if (data.section2.subSection2A) {
+        for (let field of subSection2AFields) {
+          if (data.section2.subSection2A.hasOwnProperty(field) && (typeof data.section2.subSection2A[field] !== 'string' || data.section2.subSection2A[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection2A.${field}` });
+          }
+        }
+
+        if (data.section2.subSection2A.busListUpRoute) {
+          if (!Array.isArray(data.section2.subSection2A.busListUpRoute) || data.section2.subSection2A.busListUpRoute.length === 0) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection2A.busListUpRoute` });
+          }
+        }
+      }
+
+      if (data.section2.subSection2B) {
+        for (let field of subSection2BFields) {
+          if (data.section2.subSection2B.hasOwnProperty(field) && (typeof data.section2.subSection2B[field] !== 'string' || data.section2.subSection2B[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection2B.${field}` });
+          }
+        }
+
+        if (data.section2.subSection2B.busListDownRoute) {
+          if (!Array.isArray(data.section2.subSection2B.busListDownRoute) || data.section2.subSection2B.busListDownRoute.length === 0) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection2B.busListDownRoute` });
+          }
+        }
+      }
+
+      if (data.section2.subSection3) {
+        for (let field of subSection3Fields) {
+          if (data.section2.subSection3.hasOwnProperty(field) && (typeof data.section2.subSection3[field] !== 'string' || data.section2.subSection3[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection3.${field}` });
+          }
+        }
+      }
+    }
+
+    // section3 
+    if (data.section3) {
+      if (data.section3.title3 && (typeof data.section3.title3 !== 'string' || data.section3.title3.trim() === '')) {
+        return res.status(400).json({ status: false, message: `Invalid section3.title3` });
+      }
+
+      if (data.section3.faq) {
+        if (!Array.isArray(data.section3.faq) || data.section3.faq.length === 0) {
+          return res.status(400).json({ status: false, message: `Invalid section3.faq` });
+        }
+
+        for (let faq of data.section3.faq) {
+          if (faq.que && (typeof faq.que !== 'string' || faq.que.trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section3.faq.que` });
+          }
+          if (faq.ans && (typeof faq.ans !== 'string' || faq.ans.trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section3.faq.ans` });
+          }
+        }
+      }
+    }
+
+    // section4 
+    if (data.section4) {
+      if (data.section4.title4 && (typeof data.section4.title4 !== 'string' || data.section4.title4.trim() === '')) {
+        return res.status(400).json({ status: false, message: `Invalid section4.title4` });
+      }
+
+      if (data.section4.allBusStops && (typeof data.section4.allBusStops !== 'string' || data.section4.allBusStops.trim() === '')) {
+        return res.status(400).json({ status: false, message: `Invalid section4.allBusStops` });
       }
     }
 
@@ -159,24 +296,18 @@ exports.updateBus = async (req, res) => {
     );
 
     if (!updateBusData) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Failed to update bus data" });
+      return res.status(400).json({ status: false, message: "Failed to update bus data" });
     }
 
-    res
-      .status(200)
-      .json({
-        status: true,
-        message: "Bus data updated successfully",
-        data: saveBusData,
-      });
+    res.status(200).json({
+      status: true,
+      message: "Bus data updated successfully",
+      data: updateBusData,
+    });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
 };
-
-
 
 exports.getAllBuses = async (req,res)=>{
     try{
@@ -191,7 +322,6 @@ exports.getAllBuses = async (req,res)=>{
        res.status(500).json({status: false, message: err.message});
     }
 }
-
 
 exports.getSingleBus = async (req,res)=>{
     try{
@@ -209,7 +339,6 @@ exports.getSingleBus = async (req,res)=>{
 }
 
 // busId
-
 exports.deleteBus = async (req,res)=>{
     try{
         const busId = req.params.busId;
