@@ -7,20 +7,19 @@ exports.createBus = async (req, res) => {
   try {
     const data = req.body;
 
-    
     const requiredFields = [
       "busTittle", "busNumber", "busImage", "busContent",
       "section1", "section2", "section3", "section4"
     ];
 
-    // required fields
+    // Required fields
     for (let field of requiredFields) {
       if (!data.hasOwnProperty(field)) {
         return res.status(400).json({ status: false, message: `${field} is required` });
       }
     }
 
-    // string fields
+    // String fields
     const stringFields = ["busTittle", "busNumber", "busImage", "busContent"];
     for (let field of stringFields) {
       if (typeof data[field] !== "string" || data[field].trim() === '') {
@@ -28,13 +27,13 @@ exports.createBus = async (req, res) => {
       }
     }
 
-    //busNumber is unique so...
+    // Bus number must be unique
     const check = await busModel.findOne({ busNumber: data.busNumber });
     if (check) {
       return res.status(400).json({ status: false, message: "Bus number already exists" });
     }
 
-    // section1
+    // Section1 validation
     if (!data.section1 || typeof data.section1 !== 'object') {
       return res.status(400).json({ status: false, message: "Invalid section1" });
     }
@@ -61,7 +60,7 @@ exports.createBus = async (req, res) => {
       }
     }
 
-    //section2
+    // Section2 validation
     if (!data.section2 || typeof data.section2 !== 'object') {
       return res.status(400).json({ status: false, message: "Invalid section2" });
     }
@@ -69,7 +68,7 @@ exports.createBus = async (req, res) => {
     const section2Fields = ["title2"];
     const subSection2AFields = ["title2A"];
     const subSection2BFields = ["title2B"];
-    const subSection3Fields = ["title3", "description3"];
+    const subSection2CFields = ["title2C", "description2C"];
 
     for (let field of section2Fields) {
       if (!data.section2[field] || typeof data.section2[field] !== 'string' || data.section2[field].trim() === '') {
@@ -97,13 +96,13 @@ exports.createBus = async (req, res) => {
       return res.status(400).json({ status: false, message: `Invalid section2.subSection2B.busListDownRoute` });
     }
 
-    for (let field of subSection3Fields) {
-      if (!data.section2.subSection3[field] || typeof data.section2.subSection3[field] !== 'string' || data.section2.subSection3[field].trim() === '') {
-        return res.status(400).json({ status: false, message: `Invalid section2.subSection3.${field}` });
+    for (let field of subSection2CFields) {
+      if (!data.section2.subSection2C[field] || typeof data.section2.subSection2C[field] !== 'string' || data.section2.subSection2C[field].trim() === '') {
+        return res.status(400).json({ status: false, message: `Invalid section2.subSection2C.${field}` });
       }
     }
 
-    //section3
+    // Section3 validation
     if (!data.section3 || typeof data.section3 !== 'object') {
       return res.status(400).json({ status: false, message: "Invalid section3" });
     }
@@ -125,7 +124,7 @@ exports.createBus = async (req, res) => {
       }
     }
 
-    //section4
+    // Section4 validation
     if (!data.section4 || typeof data.section4 !== 'object') {
       return res.status(400).json({ status: false, message: "Invalid section4" });
     }
@@ -154,6 +153,7 @@ exports.createBus = async (req, res) => {
   }
 };
 
+
 exports.updateBus = async (req, res) => {
   try {
     const busId = req.params.busId;
@@ -168,7 +168,7 @@ exports.updateBus = async (req, res) => {
       "section1", "section2", "section3", "section4"
     ];
 
-    //  top-level fields
+    // Top-level fields
     for (let field of requiredFields) {
       if (data.hasOwnProperty(field)) {
         if (typeof data[field] !== "string" || data[field].trim() === '') {
@@ -177,7 +177,7 @@ exports.updateBus = async (req, res) => {
       }
     }
 
-    // section1 
+    // Section 1 validation
     if (data.section1) {
       const section1Fields = ["title1", "description1"];
       const subSection1AFields = ["title1A", "busStarts1A", "busEnds1A", "firstBus1A", "lastBus1A", "totalStops1A", "totalDepartures1A"];
@@ -206,12 +206,12 @@ exports.updateBus = async (req, res) => {
       }
     }
 
-    // section2 
+    // Section 2 validation
     if (data.section2) {
       const section2Fields = ["title2"];
       const subSection2AFields = ["title2A"];
       const subSection2BFields = ["title2B"];
-      const subSection3Fields = ["title3", "description3"];
+      const subSection2CFields = ["title2C", "description2C"];
 
       for (let field of section2Fields) {
         if (data.section2.hasOwnProperty(field) && (typeof data.section2[field] !== 'string' || data.section2[field].trim() === '')) {
@@ -247,16 +247,16 @@ exports.updateBus = async (req, res) => {
         }
       }
 
-      if (data.section2.subSection3) {
-        for (let field of subSection3Fields) {
-          if (data.section2.subSection3.hasOwnProperty(field) && (typeof data.section2.subSection3[field] !== 'string' || data.section2.subSection3[field].trim() === '')) {
-            return res.status(400).json({ status: false, message: `Invalid section2.subSection3.${field}` });
+      if (data.section2.subSection2C) {
+        for (let field of subSection2CFields) {
+          if (data.section2.subSection2C.hasOwnProperty(field) && (typeof data.section2.subSection2C[field] !== 'string' || data.section2.subSection2C[field].trim() === '')) {
+            return res.status(400).json({ status: false, message: `Invalid section2.subSection2C.${field}` });
           }
         }
       }
     }
 
-    // section3 
+    // Section 3 validation
     if (data.section3) {
       if (data.section3.title3 && (typeof data.section3.title3 !== 'string' || data.section3.title3.trim() === '')) {
         return res.status(400).json({ status: false, message: `Invalid section3.title3` });
@@ -278,7 +278,7 @@ exports.updateBus = async (req, res) => {
       }
     }
 
-    // section4 
+    // Section 4 validation
     if (data.section4) {
       if (data.section4.title4 && (typeof data.section4.title4 !== 'string' || data.section4.title4.trim() === '')) {
         return res.status(400).json({ status: false, message: `Invalid section4.title4` });
@@ -308,6 +308,7 @@ exports.updateBus = async (req, res) => {
     res.status(500).json({ status: false, message: err.message });
   }
 };
+
 
 exports.getAllBuses = async (req,res)=>{
     try{
