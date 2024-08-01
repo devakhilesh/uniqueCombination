@@ -42,7 +42,7 @@ const busBlog = new mongoose.Schema(
 module.exports = mongoose.model("BusBlog", busBlog);
 
 
-const stops = [
+/* const stops = [
   "Babarpur Extension",
   "Mauzpur",
   "Zafarabad School",
@@ -78,3 +78,4 @@ const stops = [
   "Shadipur Depot"
 ];
 console.log("stops",stops.length);
+ */

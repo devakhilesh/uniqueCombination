@@ -2,7 +2,8 @@ const { isValidObjectId } = require("mongoose");
 const busModel = require("../models/busModel");
 const busBlogModel = require("../models/busBlogModel");
 
-
+// old one 
+/* 
 exports.createBus = async (req, res) => {
   try {
     const data = req.body;
@@ -152,7 +153,6 @@ exports.createBus = async (req, res) => {
     res.status(500).json({ status: false, message: err.message });
   }
 };
-
 
 exports.updateBus = async (req, res) => {
   try {
@@ -309,6 +309,132 @@ exports.updateBus = async (req, res) => {
   }
 };
 
+ */
+
+
+// new 
+
+
+
+
+exports.createBus = async (req, res) => {
+  try {
+    const { busTittle, busNumber, busListUpRoute, busListDownRoute } = req.body;
+
+    if (!busTittle || !busNumber || !busListUpRoute || !busListDownRoute) {
+      return res.status(400).json({
+        status: false,
+        message: "busTittle, busNumber, busListUpRoute, and busListDownRoute are required",
+      });
+    }
+
+    if (!Array.isArray(busListUpRoute) || !busListUpRoute.every(item => typeof item === 'string')) {
+      return res.status(400).json({
+        status: false,
+        message: "busListUpRoute must be an array of strings",
+      });
+    }
+    if (!Array.isArray(busListDownRoute) || !busListDownRoute.every(item => typeof item === 'string')) {
+      return res.status(400).json({
+        status: false,
+        message: "busListDownRoute must be an array of strings",
+      });
+    }
+
+    const saveBusData = await busModel.create({
+      busTittle,
+      busNumber,
+      busListUpRoute,
+      busListDownRoute,
+    });
+
+    if (!saveBusData) {
+      return res.status(400).json({ status: false, message: "Failed to save bus data" });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Bus data saved successfully",
+      data: saveBusData,
+    });
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
+  }
+};
+
+
+
+exports.updateBus = async (req, res) => {
+  try {
+
+    const busId = req.params.busId;
+
+    const { busTittle, busNumber, busListUpRoute, busListDownRoute } = req.body;
+
+    if (!busId || !mongoose.Types.ObjectId.isValid(busId)) {
+      return res.status(400).json({ status: false, message: "Invalid busId" });
+    }
+
+    const updateData = {};
+
+    if (busTittle) {
+      if (typeof busTittle !== 'string') {
+        return res.status(400).json({ status: false, message: "busTittle must be a string" });
+      }
+      updateData.busTittle = busTittle;
+    }
+
+    if (busNumber) {
+      if (typeof busNumber !== 'string') {
+        return res.status(400).json({ status: false, message: "busNumber must be a string" });
+      }
+      updateData.busNumber = busNumber;
+    }
+
+    if (busListUpRoute) {
+      if (!Array.isArray(busListUpRoute) || !busListUpRoute.every(item => typeof item === 'string')) {
+        return res.status(400).json({
+          status: false,
+          message: "busListUpRoute must be an array of strings",
+        });
+      }
+      updateData.busListUpRoute = busListUpRoute;
+    }
+
+    if (busListDownRoute) {
+      if (!Array.isArray(busListDownRoute) || !busListDownRoute.every(item => typeof item === 'string')) {
+        return res.status(400).json({
+          status: false,
+          message: "busListDownRoute must be an array of strings",
+        });
+      }
+      updateData.busListDownRoute = busListDownRoute;
+    }
+
+    const updateBusData = await busModel.findByIdAndUpdate(
+      busId,
+      { ...updateData },
+      { new: true }
+    );
+
+    if (!updateBusData) {
+      return res.status(400).json({ status: false, message: "Failed to update bus data" });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Bus data updated successfully",
+      data: updateBusData,
+    });
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
+  }
+};
+
+
+
+
+
 
 exports.getAllBuses = async (req,res)=>{
     try{
@@ -357,3 +483,7 @@ exports.deleteBus = async (req,res)=>{
        res.status(500).json({status: false, message: err.message});
     }
 }
+
+
+
+// this is called computer 

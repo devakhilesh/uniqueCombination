@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/* const mongoose = require("mongoose");
 
 const busSchema = new mongoose.Schema(
   {
@@ -92,7 +92,6 @@ const busSchema = new mongoose.Schema(
         },
       },
     },
-
     section2: {
       title2: {
         type: String,
@@ -133,7 +132,6 @@ const busSchema = new mongoose.Schema(
         },
       },
     },
-
     section3: {
       title3: {
         type: String,
@@ -152,7 +150,6 @@ const busSchema = new mongoose.Schema(
         },
       ],
     },
-
     section4: {
       title4: {
         type: String,
@@ -163,6 +160,41 @@ const busSchema = new mongoose.Schema(
         required: true,
       },
     },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("BusModel", busSchema);
+ */
+
+// new
+
+const mongoose = require("mongoose");
+
+const busSchema = new mongoose.Schema(
+  {
+    busTittle: {
+      type: String,
+      required: true,
+    },
+    busNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    busListUpRoute: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    busListDownRoute: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );

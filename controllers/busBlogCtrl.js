@@ -289,7 +289,6 @@ res.status(200).json({status: true, message: "Bus blog data fetched successfully
   }
 }
 
-
 exports.getAllBlogListOfParticularBus = async (req, res)=>{
   try{
 
