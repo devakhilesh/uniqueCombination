@@ -387,7 +387,7 @@ nearByAttractions:{
   }
 },
 
-saftyMeasures:{
+safetyMeasures:{
   tittle:{
     type:String,
     required: true,

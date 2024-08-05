@@ -444,7 +444,7 @@ exports.createBus = async (req, res) => {
       "busTittle", "busNumber", "busImage", "busContent",
       "section1", "section2", "section3", "section4",
       "landMark", "freqOfBus", "totalNumOfStops",
-      "nearByAttractions", "saftyMeasures", "dailyPassengersTips",
+      "nearByAttractions", "safetyMeasures", "dailyPassengersTips",
       "specialNotes"
     ];
 
@@ -587,17 +587,17 @@ exports.createBus = async (req, res) => {
       return res.status(400).json({ status: false, message: `Invalid nearByAttractions.description` });
     }
 
-    // saftyMeasures validation
-    if (!data.saftyMeasures || typeof data.saftyMeasures !== 'object') {
-      return res.status(400).json({ status: false, message: "Invalid saftyMeasures" });
+    // safetyMeasures validation
+    if (!data.safetyMeasures || typeof data.safetyMeasures !== 'object') {
+      return res.status(400).json({ status: false, message: "Invalid safetyMeasures" });
     }
 
-    if (!data.saftyMeasures.tittle || typeof data.saftyMeasures.tittle !== 'string' || data.saftyMeasures.tittle.trim() === '') {
-      return res.status(400).json({ status: false, message: `Invalid saftyMeasures.tittle` });
+    if (!data.safetyMeasures.tittle || typeof data.safetyMeasures.tittle !== 'string' || data.safetyMeasures.tittle.trim() === '') {
+      return res.status(400).json({ status: false, message: `Invalid safetyMeasures.tittle` });
     }
 
-    if (!data.saftyMeasures.description || typeof data.saftyMeasures.description !== 'string' || data.saftyMeasures.description.trim() === '') {
-      return res.status(400).json({ status: false, message: `Invalid saftyMeasures.description` });
+    if (!data.safetyMeasures.description || typeof data.safetyMeasures.description !== 'string' || data.safetyMeasures.description.trim() === '') {
+      return res.status(400).json({ status: false, message: `Invalid safetyMeasures.description` });
     }
 
     // dailyPassengersTips validation
@@ -648,7 +648,7 @@ exports.updateBus = async (req, res) => {
     //   "busTittle", "busNumber", "busImage", "busContent",
     //   "section1", "section2", "section3", "section4",
     //   "landMark", "freqOfBus", "totalNumOfStops",
-    //   "nearByAttractions", "saftyMeasures", "dailyPassengersTips",
+    //   "nearByAttractions", "safetyMeasures", "dailyPassengersTips",
     //   "specialNotes"
     // ];
 
@@ -779,7 +779,7 @@ exports.updateBus = async (req, res) => {
       { section: 'freqOfBus', fields: ['tittle', 'description'] },
       { section: 'totalNumOfStops', fields: ['tittle', 'description'] },
       { section: 'nearByAttractions', fields: ['tittle', 'description'] },
-      { section: 'saftyMeasures', fields: ['tittle', 'description'] },
+      { section: 'safetyMeasures', fields: ['tittle', 'description'] },
       { section: 'dailyPassengersTips', fields: ['tittle', 'description'] },
       { section: 'specialNotes', fields: ['tittle', 'description'] },
     ];
