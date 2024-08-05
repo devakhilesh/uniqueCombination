@@ -7,8 +7,7 @@ const express = require("express")
 const app = require("./app");
  
 mongoose.connect(process.env.MONGODB_URL_LOCAL, {
-    // useNewUrlParser: true,
-    // useUnifiedTopoLogy: true,
+
   })
 
   .then(()=> console.log("MongoDB connected successfully"))

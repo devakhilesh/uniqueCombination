@@ -8,6 +8,7 @@ const router = express.Router()
 router.route("/create").post(createBus)
 router.route("/update/:busId").put(updateBus)
 router.route("/delete/:busId").delete(deleteBus)
+
 router.route("/createBusBlog/:busId").post(createBusBlog)
 router.route("/updatebusBusBlog/:blogId").put(updateBusBlog)
 router.route("/deleteBusBlog/:blogId").delete(deleteParticularBlog)

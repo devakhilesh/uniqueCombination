@@ -12,6 +12,7 @@ app.use(fileUpload());
 
 const uniqueCombo = require("./routes/uniqueCombination");
 const admin = require("./routing/adminRouting");
+const public = require("./routing/publicRouting");
 app.get("/", async (req, res) => {
   return res.sendFile(path.join(__dirname, "index.html"));
 });
@@ -19,5 +20,7 @@ app.get("/", async (req, res) => {
 app.use("/", uniqueCombo);
 
 app.use("/", admin);
+
+app.use("/", public);
 
 module.exports = app;
