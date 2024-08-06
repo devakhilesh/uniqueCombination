@@ -501,7 +501,7 @@ exports.createBus = async (req, res) => {
       return res.status(400).json({ status: false, message: "Invalid section2" });
     }
 
-    const section2Fields = ["title2"];
+    const section2Fields = ["title2", "description2"];
     const subSection2AFields = ["title2A"];
     const subSection2BFields = ["title2B"];
     const subSection2CFields = ["title2C", "description2C"];
@@ -692,7 +692,7 @@ exports.updateBus = async (req, res) => {
 
     // Section 2 validation
     if (data.section2) {
-      const section2Fields = ["title2"];
+      const section2Fields = ["title2","description2"];
       const subSection2AFields = ["title2A"];
       const subSection2BFields = ["title2B"];
       const subSection2CFields = ["title2C", "description2C"];

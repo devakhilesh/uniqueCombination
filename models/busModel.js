@@ -167,9 +167,7 @@ const busSchema = new mongoose.Schema(
 module.exports = mongoose.model("BusModel", busSchema);
  */
 
-
-
-// new but old 
+// new but old
 /* 
 const mongoose = require("mongoose");
 
@@ -203,8 +201,6 @@ const busSchema = new mongoose.Schema(
 
 module.exports = mongoose.model("BusModel", busSchema);
  */
-
-
 
 const mongoose = require("mongoose");
 
@@ -301,19 +297,23 @@ const busSchema = new mongoose.Schema(
       },
     },
 
-landMark:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type:String,
-    required: true,
-  }
-},
+    landMark: {
+      tittle: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
 
     section2: {
       title2: {
+        type: String,
+        required: true,
+      },
+      description2: {
         type: String,
         required: true,
       },
@@ -354,91 +354,90 @@ landMark:{
       },
     },
 
-// new Added
-freqOfBus:{
-  tittle:{
-    type:String
-  },
-  description:{
-    type:String
-  }
-},
+    // new Added
+    freqOfBus: {
+      tittle: {
+        type: String,
+      },
+      description: {
+        type: String,
+      },
+    },
 
-totalNumOfStops:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type:String,
-    required: true
-  }
-},
-
-
-nearByAttractions:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type:String,
-    required: true,
-  }
-},
-
-safetyMeasures:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type:String,
-    required: true,
-  }
-},
-
-dailyPassengersTips:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type: String,
-    required: true,
-  }
-},
-
-// FAQ
-section3: {
-  title3: {
-    type: String,
-    required: true,
-  },
-  faq: [
-    {
-      que: {
+    totalNumOfStops: {
+      tittle: {
         type: String,
         required: true,
       },
-      ans: {
+      description: {
         type: String,
         required: true,
       },
     },
-  ],
-},
 
-specialNotes:{
-  tittle:{
-    type:String,
-    required: true,
-  },
-  description:{
-    type: String,
-    required: true,
-  }
-},
+    nearByAttractions: {
+      tittle: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
+
+    safetyMeasures: {
+      tittle: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
+
+    dailyPassengersTips: {
+      tittle: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
+
+    // FAQ
+    section3: {
+      title3: {
+        type: String,
+        required: true,
+      },
+      faq: [
+        {
+          que: {
+            type: String,
+            required: true,
+          },
+          ans: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+    },
+
+    specialNotes: {
+      tittle: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+    },
 
     section4: {
       title4: {
