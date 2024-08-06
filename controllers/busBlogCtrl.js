@@ -107,7 +107,6 @@ if (checkBlogExists){
 };
 
 
-
 exports.updateBusBlog = async (req, res) => {
   try {
     const blogId = req.params.blogId;

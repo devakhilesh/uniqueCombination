@@ -816,7 +816,8 @@ exports.updateBus = async (req, res) => {
 
 exports.getAllBuses = async (req,res)=>{
     try{
-        const buses = await busModel.find();
+   const filter = req.query
+        const buses = await busModel.find({...filter});
         if(buses.length==0){
             return res.status(404).json({status: false, message: 'buses data not found'});
         }
