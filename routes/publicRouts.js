@@ -1,10 +1,10 @@
 const express = require('express')
-const { getSingleBus, getAllBuses } = require('../controllers/busCtrl')
+const { getAllBusesUser, getSingleBusUser } = require('../controllers/busCtrl')
 
 const router = express.Router()
 
-router.route("/getAllBus").get(getAllBuses)
-router.route("/getSingleBus/:busId").get(getSingleBus)
+router.route("/getAllBus").get(getAllBusesUser)
+router.route("/getSingleBus/:busId").get(getSingleBusUser)
 
 // router.route("/").
 // router.route("/").

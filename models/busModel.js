@@ -449,6 +449,12 @@ const busSchema = new mongoose.Schema(
         required: true,
       },
     },
+
+
+    isPublic:{
+      type: Boolean,
+      default: true,
+    }
   },
   { timestamps: true }
 );

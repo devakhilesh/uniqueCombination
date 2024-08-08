@@ -1,5 +1,5 @@
 const express = require('express')
-const { createBus, updateBus, deleteBus } = require('../controllers/busCtrl')
+const { createBus, updateBus, deleteBus, getAllBuses, getSingleBus } = require('../controllers/busCtrl')
 const { convert, busBlog } = require('../controllers/csvTojson')
 
 const router = express.Router()
@@ -7,6 +7,8 @@ const router = express.Router()
 router.route("/create").post(createBus)
 router.route("/update/:busId").put(updateBus)
 router.route("/delete/:busId").delete(deleteBus)
+router.route("/getAllBus").get(getAllBuses)
+router.route("/getSingleBus/:busId").get(getSingleBus)
 
 // router.route("/createBusBlog/:busId").post(createBusBlog)
 // router.route("/updatebusBusBlog/:blogId").put(updateBusBlog)

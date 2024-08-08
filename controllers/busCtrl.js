@@ -1,6 +1,6 @@
 const { isValidObjectId } = require("mongoose");
 const busModel = require("../models/busModel");
-const busBlogModel = require("../models/busFromAndToModel");
+const busFromToModel = require("../models/busFromAndToModel");
 const mongoose = require("mongoose");
 // old one 
 /* 
@@ -814,10 +814,65 @@ exports.updateBus = async (req, res) => {
   }
 };
 
+
+
 exports.getAllBuses = async (req,res)=>{
+  try{
+ const filter = req.query
+      const buses = await busModel.find({...filter});
+      if(buses.length==0){
+          return res.status(404).json({status: false, message: 'buses data not found'});
+      }
+
+      res.status(200).json({status:true , message:"All buses List", data: buses});
+
+  }catch(err){
+     res.status(500).json({status: false, message: err.message});
+  }
+}
+
+exports.getSingleBus = async (req,res)=>{
+  try{
+      const busId = req.params.busId;
+      const buses = await busModel.findById(busId);
+      if(!buses){
+          return res.status(404).json({status: false, message: 'bus data not found'});
+      }
+
+      res.status(200).json({status:true , message:"Single Bus Data", data: buses});
+
+  }catch(err){
+     res.status(500).json({status: false, message: err.message});
+  }
+}
+
+
+
+exports.deleteBus = async (req,res)=>{
+  try{
+      const busId = req.params.busId;
+
+      const buses = await busModel.findByIdAndDelete(busId);
+      if(!buses){
+          return res.status(404).json({status: false, message: 'bus data not found to delete'});
+      }
+
+      await busFromToModel.deleteMany({busId:busId});
+
+      res.status(200).json({status:true , message:"Bus with associated data deleted susscesfuly"});
+
+  }catch(err){
+     res.status(500).json({status: false, message: err.message});
+  }
+}
+
+
+// isPublicTrue
+//// get All Busses For User //
+exports.getAllBusesUser = async (req,res)=>{
     try{
    const filter = req.query
-        const buses = await busModel.find({...filter});
+        const buses = await busModel.find({...filter,isPublic:true});
         if(buses.length==0){
             return res.status(404).json({status: false, message: 'buses data not found'});
         }
@@ -828,11 +883,11 @@ exports.getAllBuses = async (req,res)=>{
        res.status(500).json({status: false, message: err.message});
     }
 }
-
-exports.getSingleBus = async (req,res)=>{
+/// get Single Bus For user////
+exports.getSingleBusUser = async (req,res)=>{
     try{
         const busId = req.params.busId;
-        const buses = await busModel.findById(busId);
+        const buses = await busModel.findOne({_id: busId, isPublic: true});
         if(!buses){
             return res.status(404).json({status: false, message: 'bus data not found'});
         }
@@ -844,25 +899,5 @@ exports.getSingleBus = async (req,res)=>{
     }
 }
 
-// busId
-exports.deleteBus = async (req,res)=>{
-    try{
-        const busId = req.params.busId;
-
-        const buses = await busModel.findByIdAndDelete(busId);
-        if(!buses){
-            return res.status(404).json({status: false, message: 'bus data not found to delete'});
-        }
-
-        await busBlogModel.deleteMany({busId:busId});
-
-        res.status(200).json({status:true , message:"Bus with associated data deleted susscesfuly"});
-
-    }catch(err){
-       res.status(500).json({status: false, message: err.message});
-    }
-}
 
 
-
-// this is called computer 
