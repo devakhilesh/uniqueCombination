@@ -4,7 +4,7 @@ const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 const busModel = require('../models/busModel');
-const busBlogModel = require('../models/busBlogModel');
+const busFromToModel = require('../models/busFromAndToModel');
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
@@ -166,10 +166,10 @@ exports.busBlog = async (req, res)=>{
             blogLongDes: blogLongDes,
           };
     
-          await busBlogModel.create(newBusBlog);
+          await busFromToModel.create(newBusBlog);
         }
     
-const getAllBlogListofBus = await busBlogModel.find({busId:busId});
+const getAllBlogListofBus = await busFromToModel.find({busId:busId});
 
 
         res.status(201).json({ status: true, message: 'Bus blogs saved successfully', data:getAllBlogListofBus, json:jsonData });

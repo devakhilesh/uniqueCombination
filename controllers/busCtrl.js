@@ -1,7 +1,9 @@
 const { isValidObjectId } = require("mongoose");
 const busModel = require("../models/busModel");
-const busBlogModel = require("../models/busBlogModel");
+const busBlogModel = require("../models/busFromAndToModel");
 const mongoose = require("mongoose");
+
+const cloudinary = require("cloudinary").v2;
 // old one 
 /* 
 exports.createBus = async (req, res) => {
@@ -455,6 +457,26 @@ exports.createBus = async (req, res) => {
       }
     }
 
+    // handling bus image
+    if (!req.files || !req.files.busImage) {
+      return res
+        .status(400)
+        .send({ status: false, message: "Provide your bus image" });
+    }
+
+    let image = req.files.busImage;
+    let result = await cloudinary.uploader.upload(image.tempFilePath,
+      {
+        folder: "busImage",
+      }
+    );
+
+    data.busImage = {
+      public_id: result.public_id,
+      url: result.secure_url,
+    }
+
+
     // String fields
     const stringFields = ["busTittle", "busNumber", "busImage", "busContent"];
     for (let field of stringFields) {
@@ -643,6 +665,29 @@ exports.updateBus = async (req, res) => {
     if (!busId || !mongoose.Types.ObjectId.isValid(busId)) {
       return res.status(400).json({ status: false, message: "Invalid busId" });
     }
+
+const busCheck = await busModel.findById(busId)
+    // handling bus image
+    if (req.files && req.files.busImage) {
+
+      let image = req.files.busImage;
+
+      await cloudinary.uploader.destroy(
+        busCheck.busImage.public_id
+      );
+      let result = await cloudinary.uploader.upload(image.tempFilePath,
+        {
+          folder: "busImage",
+        }
+      );
+      data.busImage = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      }
+    }
+
+  
+
 
     // const requiredFields = [
     //   "busTittle", "busNumber", "busImage", "busContent",
@@ -865,4 +910,4 @@ exports.deleteBus = async (req,res)=>{
 
 
 
-// this is called computer 
+

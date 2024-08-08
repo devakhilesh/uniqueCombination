@@ -1,8 +1,8 @@
 const { isValidObjectId } = require("mongoose");
 const busModel = require("../models/busModel");
-const busBlogModel = require("../models/busBlogModel");
+const busFromToModel = require("../models/busFromAndToModel");
 
-exports.createBusBlog = async (req, res) => {
+exports.createBusFromTo = async (req, res) => {
   try {
     const busId = req.params.busId;
 
@@ -18,14 +18,11 @@ if(!checkBus){
 }
 
 
-    const {from, to, blogTitle, blogShortDes, blogLongDes} = data;
+    const {from, to} = data;
 
     const vaildfield = [
       "from",
-      "to",
-      "blogTitle",
-      "blogShortDes",
-      "blogLongDes"
+      "to"
     ];
 
     const dataFields = Object.keys(data);
@@ -65,28 +62,12 @@ if(!checkBus){
         });
       }
 
-const checkBlogExists = await busBlogModel.findOne({busId:busId, from:from, to:to});
+const checkBlogExists = await busFromToModel.findOne({busId:busId, from:from, to:to});
 if (checkBlogExists){
     return res.status(400).json({status: false, message: `Blog already exists for this particular bus for this from  ${from} to ${to} route `});
 }
 
-    if (blogTitle.trim() === ''  ||typeof blogTitle !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogTitle" });
-    }
-   
-    if (blogShortDes.trim() === '' ||typeof blogShortDes !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogShortDes" });
-    }
 
-  if (blogLongDes.trim() === '' ||typeof blogLongDes !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogLongDes" });
-    }
     data.busId = busId;
 
     const saveBusBlogData = await busModel.create(data);
@@ -107,7 +88,7 @@ if (checkBlogExists){
 };
 
 
-exports.updateBusBlog = async (req, res) => {
+exports.updateBusFromTo = async (req, res) => {
   try {
     const blogId = req.params.blogId;
 
@@ -122,14 +103,11 @@ if(!checkBlog){
   return res.status(404).json({ status: false, message: "Bus blog not found" });
 }
 
-    const {from, to, blogTitle, blogShortDes, blogLongDes} = data;
+    const {from, to} = data;
 
     const vaildfield = [
       "from",
-      "to",
-      "blogTitle",
-      "blogShortDes",
-      "blogLongDes"
+      "to"
     ];
 
     const dataFields = Object.keys(data);
@@ -167,33 +145,13 @@ if(to){
 
     }
 
-if(blogTitle){
-    if (blogTitle.trim() === ''|| typeof blogTitle !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogTitle" });
-    }
-   }
-   if(blogShortDes){
-    if (blogShortDes.trim() === ''||typeof blogShortDes !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogShortDes" });
-    }
-}
-if(blogLongDes){
-  if (blogLongDes.trim() === '' ||typeof blogLongDes !== "string") {
-      return res
-        .status(400)
-        .json({ status: false, message: "Invalid blogLongDes" });
-    }
-}
-const checkBlogExists = await busBlogModel.findOne({busId:checkBlog.busId, from:from, to:to});
+
+const checkBlogExists = await busFromToModel.findOne({busId:checkBlog.busId, from:from, to:to});
 if (checkBlogExists){
 
   await findByIdAndDelete(checkBlogExists._id);
   data.busId = checkBlog._id;
-const updateData = await busBlogModel.create(data)
+const updateData = await busFromToModel.create(data)
 return res.status(200).json({status: true, message:"blog updated successfully", data: updateData})
 
 }
@@ -223,7 +181,7 @@ exports.getAllBusesListAccDestination = async (req, res)=>{
 const from = req.query.from
 const to = req.query.to
 
-const allBussesList = await busBlogModel.find({ from: from, to: to}).populate("busId")
+const allBussesList = await busFromToModel.find({ from: from, to: to}).populate("busId")
 if(allBussesList.length==0){
   return res.status(404).json({ status: false, message: "No bus found for this route" });
 }
@@ -251,7 +209,7 @@ res.status(200).json({status: true, message: "Bus data fetched successfully for 
 }
 
 // tittle short description long description bus image aur all stop list from to 
-exports.getparticularBusBlog = async (req, res)=>{
+exports.getparticularBusFromTo = async (req, res)=>{
   try{
 
 const busId = req.params.busId
@@ -264,7 +222,7 @@ if (!busId || !isValidObjectId(busId)) {
 }
 
 
-const busBlog = await busBlogModel.findOne({busId:busId ,from: from, to: to}).populate("busId")
+const busBlog = await busFromToModel.findOne({busId:busId ,from: from, to: to}).populate("busId")
 if(!busBlog){
   return res.status(404).json({ status: false, message: "No bus blog found for this route" });
 }
@@ -300,7 +258,7 @@ const check = await busModel.findById(busId)
 if(!check){
   return res.status(404).json({ status: false, message: "No bus found" });
 }
-const allBusBlogList = await busBlogModel.find({ busId }).select('-busId');
+const allBusBlogList = await busFromToModel.find({ busId }).select('-busId');
 
 if(allBusBlogList.length == 0){
   return res.status(404).json({ status: false, message: "No blog found for this bus" });
@@ -335,7 +293,7 @@ exports.deleteParticularBlog = async (req, res)=>{
       return res.status(400).json({ status: false, message: "Invalid blogId" });
     }
 
-    let deleteBlog = await busBlogModel.findByIdAndDelete(blogId);
+    let deleteBlog = await busFromToModel.findByIdAndDelete(blogId);
 if(!deleteBlog){
   return res.status(404).json({ status: false, message: "Blog not found" });
 }

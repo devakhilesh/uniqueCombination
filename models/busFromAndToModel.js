@@ -18,28 +18,11 @@ const busBlog = new mongoose.Schema(
       required: true,
     },
 
-    // blogTitle: {
-    //   type: String,
-    //   required: true,
-    // },
-
-    // blogShortDes: {
-    //   type: String,
-    //   required: true,
-    // },
-    // blogLongDes: {
-    //   type: String,
-    //   required: true,
-    // },
-    // // blogImg: {
-    // //   type: String,
-    // //   required: true,
-    // // },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("BusBlog", busBlog);
+module.exports = mongoose.model("FromToModel", busBlog);
 
 
 /* const stops = [
