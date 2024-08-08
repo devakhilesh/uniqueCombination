@@ -217,16 +217,9 @@ const busSchema = new mongoose.Schema(
       trim: true,
     },
     busImage: {
-        public_id: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-      },
-    
+      type: String,
+      required: true,
+    },
     busContent: {
       type: String,
       required: true,
